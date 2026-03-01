@@ -23,12 +23,12 @@ export default function EventCard({
       className="
         group
         rounded-xl 
-        border border-gray-200 
-        bg-white 
+        border border-gray-200 dark:border-gray-700
+        bg-white dark:bg-gray-800
         overflow-hidden 
-        transition-all 
-        hover:shadow-md 
-        hover:border-gray-300 
+        transition-all duration-300
+        hover:shadow-md dark:hover:shadow-lg/30
+        hover:border-gray-300 dark:hover:border-gray-600
         active:scale-[0.99]
       "
     >
@@ -45,31 +45,31 @@ export default function EventCard({
 
         <div className="p-4 pt-3 space-y-2.5">
           {/* Location */}
-          <div className="flex items-center gap-1.5 text-sm text-gray-600">
+          <div className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
             <Image
               src="/icons/pin.svg"
               alt=""
               width={16}
               height={16}
-              className="shrink-0 opacity-80"
+              className="shrink-0 opacity-80 dark:opacity-70"
             />
             <span className="truncate">{location}</span>
           </div>
 
           {/* Title */}
-          <h3 className="font-semibold text-gray-900 leading-tight line-clamp-2 min-h-[2.5rem]">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 leading-tight line-clamp-2 min-h-[2.5rem]">
             {title}
           </h3>
 
           {/* Date & Time */}
-          <div className="flex items-center gap-5 text-sm text-gray-600">
+          <div className="flex items-center gap-5 text-sm text-gray-600 dark:text-gray-400">
             <div className="flex items-center gap-1.5">
               <Image
                 src="/icons/calander.svg"
                 alt=""
                 width={16}
                 height={16}
-                className="shrink-0 opacity-80"
+                className="shrink-0 opacity-80 dark:opacity-70"
               />
               <time dateTime={date}>{date}</time>
             </div>
@@ -80,7 +80,7 @@ export default function EventCard({
                 alt=""
                 width={16}
                 height={16}
-                className="shrink-0 opacity-80"
+                className="shrink-0 opacity-80 dark:opacity-70"
               />
               <span>{time}</span>
             </div>

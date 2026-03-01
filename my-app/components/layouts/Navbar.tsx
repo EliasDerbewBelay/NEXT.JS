@@ -4,14 +4,14 @@ import ModeToggle from "../ModeToggle";
 
 export default function Navbar() {
   return (
-    <header className="p-3 bg-white/15">
+    <header className="p-3 bg-white/15 fixed top-0 right-0 left-0 z-999 shadow-md border-b dark:bg-slate-900 bg-white/100 transition-all duration-300">
       <nav className="flex justify-around items-center">
         <Link href="/" className="flex gap-2 items-center ">
           <Image src="/logo/logo.png" alt="logo" width={24} height={24} />
           <p className="font-semibold">DevEvent</p>
         </Link>
 
-        <ul className="flex flex-row gap-6 items-center">
+        <div className="flex gap-6">
           <div className="flex gap-6">
             <Link href="/">Home</Link>
             <Link href="/Event">Events</Link>
@@ -20,7 +20,7 @@ export default function Navbar() {
           <div>
             <ModeToggle />
           </div>
-        </ul>
+        </div>
       </nav>
     </header>
   );

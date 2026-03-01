@@ -4,8 +4,8 @@ import { events } from "@/lib/constants";
 
 const Home = () => {
   return (
-    <section className="mt-9 flex flex-col items-center min-h-screen m-10">
-      <h1 className="text-center text-6xl font-extra-bold">
+    <section className="mt-30 flex flex-col items-center min-h-screen m-10">
+      <h1 className="text-center text-6xl font-bold">
         The Hub for Every Dev <br /> Event You Can't Miss
       </h1>
       <p className="text-center mt-5">

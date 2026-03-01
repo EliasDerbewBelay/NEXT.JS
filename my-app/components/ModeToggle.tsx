@@ -19,7 +19,7 @@ export default function ModeToggle() {
   };
   return (
     <div>
-      <button onClick={handleTheme}>
+      <button onClick={handleTheme} className="hover:cursor-pointer">
         {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
       </button>
     </div>
