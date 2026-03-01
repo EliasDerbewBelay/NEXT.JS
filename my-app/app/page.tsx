@@ -2,7 +2,14 @@ import ExploreBtn from "@/components/ExploreBtn";
 import EventCard from "@/components/cards/EventCard";
 
 const events = [
-  { title: "event 1", image: "/events/event1.jpg" },
+  {
+    title: "event 1",
+    image: "/events/event1.jpg",
+    slug: "enent-1",
+    location: "location-1",
+    date: "date-1",
+    time: "Time-1",
+  },
   { title: "event 2", image: "/events/event2.jpg" },
   { title: "event 3", image: "/events/event3.jpg" },
   { title: "event 4", image: "/events/event4.jpg" },
@@ -27,7 +34,7 @@ const Home = () => {
           {events.map((event, index) => {
             return (
               <li key={index} className="list-none">
-                <EventCard image={event.image} title={event.title} />
+                <EventCard {...event} />
               </li>
             );
           })}
