@@ -9,7 +9,7 @@ export default function ExploreBtn() {
       className="mt-7 mx-auto bg-green-900 px-6 py-2 flex rounded-lg"
       onClick={() => console.log("CLICK")}
     >
-      <a href="#events" className="flex gap-4 items-center justify-center">
+      <a href="#events" className="flex gap-4 items-center justify-center text-white">
         Explore Events
         <Image
           src="/icons/down-arrow.svg"

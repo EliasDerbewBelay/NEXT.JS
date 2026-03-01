@@ -1,0 +1,91 @@
+export type EventItem = {
+  title: string;
+  image: string;
+  slug: string;
+  location: string;
+  date: string;
+  time: string;
+}
+
+export const events: EventItem[] = [
+  {
+    title: "Django Backend Workshop",
+    image: "/events/django-workshop.jpg",
+    slug: "django-backend-workshop",
+    location: "Tech Hub Annex",
+    date: "2024-05-15",
+    time: "10:00 AM",
+  },
+  {
+    title: "Tailwind CSS Design Sprint",
+    image: "/events/tailwind-sprint.jpg",
+    slug: "tailwind-css-design-sprint",
+    location: "Creative Collective",
+    date: "2024-05-20",
+    time: "02:00 PM",
+  },
+  {
+    title: "Personal Finance Seminar",
+    image: "/events/finance-seminar.jpg",
+    slug: "personal-finance-seminar",
+    location: "Grand Library",
+    date: "2024-06-02",
+    time: "09:30 AM",
+  },
+  {
+    title: "Next.js Conf 2024",
+    image: "/events/nextjs-conf.jpg",
+    slug: "nextjs-conf-2024",
+    location: "Online / San Francisco",
+    date: "2024-06-10",
+    time: "08:00 AM",
+  },
+  {
+    title: "Open Source Contribution Day",
+    image: "/events/open-source.jpg",
+    slug: "open-source-contribution-day",
+    location: "Developer Lounge",
+    date: "2024-06-18",
+    time: "11:00 AM",
+  },
+  {
+    title: "Startup Networking Mixer",
+    image: "/events/networking.jpg",
+    slug: "startup-networking-mixer",
+    location: "The Rooftop Bar",
+    date: "2024-07-05",
+    time: "06:30 PM",
+  },
+  {
+    title: "Python for Beginners",
+    image: "/events/python-basics.jpg",
+    slug: "python-for-beginners",
+    location: "Room 404 - University",
+    date: "2024-07-12",
+    time: "01:00 PM",
+  },
+  {
+    title: "React Server Components Deep Dive",
+    image: "/events/react-dive.jpg",
+    slug: "react-server-components-deep-dive",
+    location: "Virtual Webinar",
+    date: "2024-07-25",
+    time: "04:00 PM",
+  },
+  {
+    title: "Database Indexing Masterclass",
+    image: "/events/db-masterclass.jpg",
+    slug: "database-indexing-masterclass",
+    location: "Data Center Lab",
+    date: "2024-08-01",
+    time: "10:00 AM",
+  },
+  {
+    title: "UI/UX for Developers",
+    image: "/events/uiux-devs.jpg",
+    slug: "uiux-for-developers",
+    location: "Studio B",
+    date: "2024-08-15",
+    time: "03:00 PM",
+  },
+];
