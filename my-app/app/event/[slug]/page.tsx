@@ -2,6 +2,9 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Calendar, Clock, MapPin, Users, Globe, Tag } from "lucide-react";
 import BookEvent from "@/components/BookEvent";
+import { IEvent } from "@/database";
+import { getSimilarEventsBySlug } from "@/lib/actions/actions";
+import EventCard from "@/components/cards/EventCard";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -49,8 +52,6 @@ const EventTags = ({ tags }: { tags: string[] }) => (
   </div>
 );
 
-const booking = 10;
-
 export default async function EventDetail({
   params,
 }: {
@@ -66,6 +67,10 @@ export default async function EventDetail({
   const { event } = await res.json();
 
   if (!event?.description) return notFound();
+
+  const booking = 10;
+
+  const similarEvents: IEvent[] = await getSimilarEventsBySlug(slug);
 
   const {
     description,
@@ -194,6 +199,15 @@ export default async function EventDetail({
               <BookEvent />
             </div>
           </aside>
+        </div>
+
+        <div className="flex w-full flex-col gap-4 pt-20">
+          <h2>Similar Events</h2>
+          <div className="events">
+            {similarEvents.length >0 && similarEvents.map((similarEvent: IEvent) => (
+                <EventCard key={similarEvent.slug} {...similarEvent}  />
+            ))}
+          </div>
         </div>
       </main>
     </div>
