@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Calendar, Clock, MapPin, Users, Globe, Tag } from "lucide-react";
+import BookEvent from "@/components/BookEvent";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -47,6 +48,8 @@ const EventTags = ({ tags }: { tags: string[] }) => (
     ))}
   </div>
 );
+
+const booking = 10;
 
 export default async function EventDetail({
   params,
@@ -164,21 +167,31 @@ export default async function EventDetail({
             )}
           </div>
 
-          {/* Booking sidebar */}
           <aside className="lg:col-span-1">
-            <div className="sticky top-6 z-10 mt-8 lg:mt-0 rounded-xl border border-border bg-card p-6 shadow-sm lg:top-10">
-              <h3 className="text-xl font-semibold text-foreground">
-                Book This Event
-              </h3>
+            <div
+              className="
+    sticky top-6 z-10
+    mt-8 lg:mt-0
+    rounded-xl border border-border
+    bg-card p-6
+    shadow-sm
+  "
+            >
+              <h2 className="text-xl font-semibold text-foreground mb-4">
+                Book Your Spot
+              </h2>
 
-              {/* Booking form placeholder */}
-              <div className="mt-6 min-h-[280px] rounded-lg bg-muted/40 p-5 text-center text-sm text-muted-foreground border border-border/50">
-                Booking form / ticket selection goes here
-                <br />
-                <small className="mt-2 block opacity-70">
-                  (Stripe, custom form, calendar picker, etc.)
-                </small>
-              </div>
+              {booking > 0 ? (
+                <p className="text-sm text-muted-foreground mb-6">
+                  {booking} people have already booked
+                </p>
+              ) : (
+                <p className="text-sm text-muted-foreground mb-6">
+                  Be the first to book
+                </p>
+              )}
+
+              <BookEvent />
             </div>
           </aside>
         </div>
