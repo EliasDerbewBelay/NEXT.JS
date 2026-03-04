@@ -4,20 +4,49 @@ import ModeToggle from "../ModeToggle";
 
 export default function Navbar() {
   return (
-    <header className="p-3 bg-white/15 fixed top-0 right-0 left-0 z-999 shadow-md border-b dark:bg-slate-900 bg-white/100 transition-all duration-300">
-      <nav className="flex justify-around items-center">
-        <Link href="/" className="flex gap-2 items-center ">
-          <Image src="/logo/logo.png" alt="logo" width={24} height={24} />
-          <p className="font-semibold">DevEvent</p>
+    <header className="fixed top-0 left-0 right-0 z-[50] w-full border-b border-border bg-background/80 backdrop-blur-md transition-all duration-300">
+      {/* Container to keep content centered and padded */}
+      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* Logo Section */}
+        <Link
+          href="/"
+          className="flex items-center gap-2 transition-opacity hover:opacity-90"
+        >
+          <Image
+            src="/logo/logo.png"
+            alt="logo"
+            width={32}
+            height={32}
+            className="h-8 w-8 object-contain"
+          />
+          <span className="hidden text-xl font-bold tracking-tight sm:block">
+            DevEvent
+          </span>
         </Link>
 
-        <div className="flex gap-6">
-          <div className="flex gap-6">
-            <Link href="/">Home</Link>
-            <Link href="/Event">Events</Link>
-            <Link href="/create">Create Event</Link>
+        {/* Navigation & Actions */}
+        <div className="flex items-center gap-4 md:gap-8">
+          {/* Links - Hidden on very small screens, or adjust spacing */}
+          <div className="flex items-center gap-4 text-sm font-medium text-muted-foreground md:gap-6">
+            <Link href="/" className="transition-colors hover:text-primary">
+              Home
+            </Link>
+            <Link
+              href="/Event"
+              className="transition-colors hover:text-primary"
+            >
+              Events
+            </Link>
+            <Link
+              href="/create"
+              className="transition-colors hover:text-primary"
+            >
+              Create Event
+            </Link>
           </div>
-          <div>
+
+          {/* Theme Toggle Wrapper */}
+          <div className="flex items-center border-l pl-4 md:pl-6 border-border">
             <ModeToggle />
           </div>
         </div>
