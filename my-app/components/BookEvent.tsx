@@ -1,16 +1,52 @@
 "use client";
 
+import { createBooking } from "@/lib/actions/booking-action";
 import { useState } from "react";
+import posthog from "posthog-js";
 
-export default function BookEvent() {
+export default function BookEvent({
+  eventId,
+  slug,
+}: {
+  // Must be `string`, not `"string"` — the latter is a literal type meaning the
+  // value must literally equal the word "string", which is never what we want.
+  eventId: string;
+  slug: string;
+}) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    // Prevent the default form GET/POST submission which would reload the page.
     e.preventDefault();
-    setTimeout(() => {
-      setSubmitted(true);
-    }, 1000);
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { success, error: actionError } = await createBooking({
+        eventId,
+        email,
+      });
+
+      if (success) {
+        setSubmitted(true);
+        posthog.capture("event_booked", { eventId, slug, email });
+      } else {
+        const message =
+          actionError instanceof Error
+            ? actionError.message
+            : "Booking failed. Please try again.";
+        setError(message);
+        posthog.captureException(actionError);
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+      console.error("Booking submission error", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -56,9 +92,17 @@ export default function BookEvent() {
             />
           </div>
 
-          {/* Submit button */}
+          {/* User-facing error message */}
+          {error && (
+            <p className="text-sm text-destructive rounded-md bg-destructive/10 px-3 py-2">
+              {error}
+            </p>
+          )}
+
+          {/* Submit button — disabled and labelled while the action is in-flight */}
           <button
             type="submit"
+            disabled={loading}
             className={`
               w-full flex items-center justify-center
               rounded-lg bg-primary px-6 py-3.5
@@ -69,7 +113,7 @@ export default function BookEvent() {
               disabled:opacity-60 disabled:pointer-events-none
             `}
           >
-            Reserve My Spot
+            {loading ? "Reserving…" : "Reserve My Spot"}
           </button>
 
           {/* Trust / legal note */}

@@ -64,8 +64,9 @@ export default async function EventDetail({
 
   if (!res.ok) return notFound();
 
-  // Cast the response so all destructured fields carry their correct types.
-  const { event } = (await res.json()) as { event: IEvent };
+  // Cast the response to IEvent and include _id, which MongoDB always returns
+  // but is not declared on IEvent (it's added by Mongoose, not the schema interface).
+  const { event } = (await res.json()) as { event: IEvent & { _id: string } };
 
   if (!event?.description) return notFound();
 
@@ -200,7 +201,7 @@ export default async function EventDetail({
                 </p>
               )}
 
-              <BookEvent />
+              <BookEvent eventId={event._id} slug={event.slug} />
             </div>
           </aside>
         </div>
@@ -216,7 +217,9 @@ export default async function EventDetail({
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">No similar events found.</p>
+            <p className="text-sm text-muted-foreground">
+              No similar events found.
+            </p>
           )}
         </section>
       </main>
