@@ -2,11 +2,10 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Calendar, Clock, MapPin, Users, Globe, Tag } from "lucide-react";
 import BookEvent from "@/components/BookEvent";
-import { IEvent } from "@/database";
+import { IEvent, Event } from "@/database";
 import { getSimilarEventsBySlug, SimilarEvent } from "@/lib/actions/actions";
 import EventCard from "@/components/cards/EventCard";
-
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+import { connectToDatabase } from "@/lib/mongodb";
 
 type EventDetailItemProps = {
   icon: React.ComponentType<{ className?: string }>;
@@ -52,22 +51,28 @@ const EventTags = ({ tags }: { tags: string[] }) => (
   </div>
 );
 
+// Configure dynamic rendering with revalidation
+export const revalidate = 1800; // Revalidate every 30 minutes
+
 export default async function EventDetail({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const res = await fetch(`${BASE_URL}/api/events/${slug}`, {
-    next: { revalidate: 1800 },
-  });
-
-  if (!res.ok) return notFound();
-
-  // Cast the response to IEvent and include _id, which MongoDB always returns
-  // but is not declared on IEvent (it's added by Mongoose, not the schema interface).
-  const { event } = (await res.json()) as { event: IEvent & { _id: string } };
-
+  
+  // Fetch directly from database to avoid build-time fetch issues
+  await connectToDatabase();
+  const eventData = await Event.findOne({ slug }).lean();
+  
+  if (!eventData) return notFound();
+  
+  // Convert MongoDB document to plain object with string _id
+  const event = {
+    ...eventData,
+    _id: eventData._id.toString(),
+  } as IEvent & { _id: string };
+  
   if (!event?.description) return notFound();
 
   const booking = 10;
