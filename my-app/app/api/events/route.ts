@@ -3,6 +3,13 @@ import { v2 as cloudinary } from "cloudinary";
 import { connectToDatabase } from "@/lib/mongodb";
 import { Event } from "@/database";
 
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 export async function POST(req: NextRequest) {
   try {
     await connectToDatabase();
@@ -78,11 +85,20 @@ export async function GET() {
 
     return NextResponse.json(
       { message: "Event list successfully", events },
-      { status: 200 },
+      { 
+        status: 200,
+        headers: {
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        },
+      },
     );
   } catch (e) {
+    console.error("Failed to fetch events:", e);
     return NextResponse.json(
-      { message: "Event fetcing failed", error: e },
+      { 
+        message: "Event fetching failed", 
+        error: e instanceof Error ? e.message : "Unknown error" 
+      },
       { status: 500 },
     );
   }

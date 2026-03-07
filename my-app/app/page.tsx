@@ -1,13 +1,65 @@
+import { Suspense } from "react";
 import ExploreBtn from "@/components/ExploreBtn";
 import EventCard from "@/components/cards/EventCard";
 import { IEvent } from "@/database";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
-const Home = async () => {
-  const response = await fetch(`${BASE_URL}/api/events`);
+// Separate component for fetching events - can be wrapped in Suspense
+async function FeaturedEvents() {
+  const response = await fetch(`${BASE_URL}/api/events`, {
+    next: { revalidate: 300 }, // Cache for 5 minutes
+  });
+  
+  if (!response.ok) {
+    return (
+      <div className="text-center text-muted-foreground">
+        Failed to load events. Please try again later.
+      </div>
+    );
+  }
+
   const { events } = await response.json();
 
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-center justify-center">
+      {events && events.length > 0 ? (
+        events.map((event: IEvent, index: number) => (
+          <li key={event.slug || index} className="list-none">
+            <EventCard {...event} />
+          </li>
+        ))
+      ) : (
+        <p className="col-span-full text-center text-muted-foreground">
+          No events available at the moment.
+        </p>
+      )}
+    </div>
+  );
+}
+
+// Loading fallback component
+function EventsLoadingSkeleton() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      {[...Array(8)].map((_, i) => (
+        <div
+          key={i}
+          className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden animate-pulse"
+        >
+          <div className="aspect-[4/3] bg-gray-200 dark:bg-gray-700" />
+          <div className="p-4 space-y-3">
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
+            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded" />
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const Home = () => {
   return (
     <section className="mt-30 flex flex-col items-center min-h-screen m-10">
       <h1 className="text-center text-6xl font-bold">
@@ -19,20 +71,12 @@ const Home = async () => {
 
       <ExploreBtn />
 
-      <div className="mt-20 space-y-7">
-        <h1 className="text-4xl ">Featured Events</h1>
+      <div className="mt-20 space-y-7 w-full">
+        <h1 className="text-4xl">Featured Events</h1>
 
-        <div className="grid grid-cols-4 gap-2 items-center justify-center">
-          {events &&
-            events.length > 0 &&
-            events.map((event: IEvent, index: number) => {
-              return (
-                <li key={index} className="list-none">
-                  <EventCard {...event} />
-                </li>
-              );
-            })}
-        </div>
+        <Suspense fallback={<EventsLoadingSkeleton />}>
+          <FeaturedEvents />
+        </Suspense>
       </div>
     </section>
   );

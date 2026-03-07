@@ -1,10 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  typescript : {
-  ignoreBuildErrors: true,
-  },
-  cacheComponents: true,
   images: {
     /**
      * Use the Cloudinary loader so Next.js generates transformation URLs
@@ -12,7 +8,15 @@ const nextConfig: NextConfig = {
      * This eliminates the "upstream image response timed out" error.
      */
     loaderFile: "./lib/cloudinary-loader.ts",
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+    ],
   },
+  // Enable React strict mode for better error detection
+  reactStrictMode: true,
 };
 
 export default nextConfig;

@@ -53,7 +53,12 @@ export async function GET(_req: NextRequest, { params }: RouteContext) {
 
     return NextResponse.json(
       { message: "Event fetched successfully.", event },
-      { status: 200 }
+      { 
+        status: 200,
+        headers: {
+          'Cache-Control': 'public, s-maxage=1800, stale-while-revalidate=3600',
+        },
+      }
     );
   } catch (e) {
     console.error(`[GET /api/events/${slug}]`, e);
