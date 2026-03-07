@@ -1,25 +1,30 @@
 import { Suspense } from "react";
 import ExploreBtn from "@/components/ExploreBtn";
 import EventCard from "@/components/cards/EventCard";
-import { IEvent } from "@/database";
+import { IEvent, Event } from "@/database";
+import { connectToDatabase } from "@/lib/mongodb";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+// Configure dynamic rendering with revalidation
+export const revalidate = 300; // Revalidate every 5 minutes
 
 // Separate component for fetching events - can be wrapped in Suspense
 async function FeaturedEvents() {
-  const response = await fetch(`${BASE_URL}/api/events`, {
-    next: { revalidate: 300 }, // Cache for 5 minutes
-  });
-  
-  if (!response.ok) {
+  let events: IEvent[] = [];
+
+  try {
+    await connectToDatabase();
+    // Fetch events directly from database instead of API route
+    // This prevents build-time fetch errors to localhost
+    const eventsData = await Event.find().sort({ createdAt: -1 }).lean();
+    events = eventsData as IEvent[];
+  } catch (error) {
+    console.error("Failed to fetch events:", error);
     return (
       <div className="text-center text-muted-foreground">
         Failed to load events. Please try again later.
       </div>
     );
   }
-
-  const { events } = await response.json();
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-center justify-center">
