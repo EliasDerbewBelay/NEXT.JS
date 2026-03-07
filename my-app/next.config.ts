@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
   images: {
     /**
      * Use the Cloudinary loader so Next.js generates transformation URLs
