@@ -64,7 +64,8 @@ export default async function EventDetail({
 
   if (!res.ok) return notFound();
 
-  const { event } = await res.json();
+  // Cast the response so all destructured fields carry their correct types.
+  const { event } = (await res.json()) as { event: IEvent };
 
   if (!event?.description) return notFound();
 
@@ -86,8 +87,10 @@ export default async function EventDetail({
     organizer,
   } = event;
 
-  const agendaItems = JSON.parse(agenda?.[0] || "[]");
-  const eventTags = JSON.parse(tags?.[0] || "[]");
+  // agenda and tags are stored as native string[] in MongoDB.
+  // JSON.parse is not needed — using them directly avoids the SyntaxError.
+  const agendaItems: string[] = Array.isArray(agenda) ? agenda : [];
+  const eventTags: string[] = Array.isArray(tags) ? tags : [];
 
   return (
     <div className="min-h-screen pb-12">
