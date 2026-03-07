@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Calendar, Clock, MapPin, Users, Globe, Tag } from "lucide-react";
 import BookEvent from "@/components/BookEvent";
 import { IEvent } from "@/database";
-import { getSimilarEventsBySlug } from "@/lib/actions/actions";
+import { getSimilarEventsBySlug, SimilarEvent } from "@/lib/actions/actions";
 import EventCard from "@/components/cards/EventCard";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -71,7 +71,8 @@ export default async function EventDetail({
 
   const booking = 10;
 
-  const similarEvents: IEvent[] = await getSimilarEventsBySlug(slug);
+  // SimilarEvent only contains the fields EventCard needs (no full IEvent required).
+  const similarEvents: SimilarEvent[] = await getSimilarEventsBySlug(slug);
 
   const {
     description,
@@ -204,14 +205,20 @@ export default async function EventDetail({
           </aside>
         </div>
 
-        <div className="flex w-full flex-col gap-4 pt-20">
-          <h2>Similar Events</h2>
-          <div className="events">
-            {similarEvents.length >0 && similarEvents.map((similarEvent: IEvent) => (
-                <EventCard key={similarEvent.slug} {...similarEvent}  />
-            ))}
-          </div>
-        </div>
+        <section className="flex w-full flex-col gap-6 pt-20">
+          <h2 className="text-xl font-semibold tracking-tight sm:text-2xl text-foreground">
+            Similar Events
+          </h2>
+          {similarEvents.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {similarEvents.map((event) => (
+                <EventCard key={event.slug} {...event} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">No similar events found.</p>
+          )}
+        </section>
       </main>
     </div>
   );
